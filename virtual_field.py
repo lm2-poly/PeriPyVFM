@@ -9,25 +9,33 @@ def readVirtualField(filename):
     
     data = []
     with open(filename, 'rb') as csvfile:
-            csvreader = csv.reader(csvfile, delimiter=';')
+            csvreader = csv.reader(csvfile, delimiter=',')
             next(csvreader, None)
             for row in csvreader:
                 data.append(np.array(map(float, row)))
                 
-    u1 = np.zeros((len(data),2))
-    u2 = np.zeros((len(data),2))
+    u = np.zeros((len(data),2))
     
     
     for i in range(0,len(data)):
-        u1[i][0] = data[i][3] * 1000.
-        u1[i][1] = data[i][4] * 1000.
-        u2[i][0] = data[i][6] * 1000.
-        u2[i][1] = data[i][7] * 1000.
+        u[i][0] = data[i][4] 
+        u[i][1] = data[i][5] 
         
-    return u1 , u2
+    return u
 
 def nu(P):
     return (3. * P[0] - 2. * P[1]) / (2. * (3. * P[0] + P[1]))
+
+def writeParaview(deck,problem):
+    #ccm_class = IO.ccm.CCM_calcul(deck,problem)
+    deck.vtk_writer.write_data(deck,problem,None)
+    
+def res1(vf1,vf2):
+     vf1 += 56000
+     return np.sqrt(vf1*vf1 + vf2*vf2)
+ 
+def res2(vf1,vf2):
+    return np.sqrt(vf1*vf1 + vf2*vf2) / 56000.
 
 def residual(P, deck):
     
@@ -39,23 +47,25 @@ def residual(P, deck):
     vf2 = 0
     energy = 0
     for i in range(0,len(u1)):
-        if deck.geometry.nodes[i][1] >= 7.:
-            vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]
-            vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i]   
-            energy += problem.strain_energy[i]
-    print vf1 , vf2 , energy
-    vf1 += 45000   
+        #if deck.geometry.nodes[i][1] >= 7.:
+        vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]
+        vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i]   
+        energy += problem.strain_energy[i]
+    print "Energies" ,vf1 , vf2 , energy
     
-    res = np.sqrt(vf1*vf1 + vf2*vf2)
-    print deck.bulk_modulus, deck.shear_modulus, nu(P) , res
+    
+    if deck.vtk_writer.vtk_enabled == True:
+        writeParaview(deck,problem)
+    
+    print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2) , res2(vf1,vf2)
     
     sys.exit()
     
-    return abs(4756.84121379 - res)
+    return res1(vf1,vf2)
 
 
-u1, u2 = readVirtualField("./examples/2D_VFM_inverse_dx1_small.csv")
-
+u1 = readVirtualField("./examples/mesh_vf1.csv")
+u2 = readVirtualField("./examples/mesh_vf2.csv")
 #print u2
 
 deck = DIC_deck("examples/input_elas_2D_short.yaml")

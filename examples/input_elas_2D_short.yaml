@@ -5,9 +5,9 @@ Material:
 Data:
     Dimension: 2
     Type: Plane_Stress
-    Sigma: 9
+    Sigma: 6
     File:
-        Name: 2D_DIC_inverse_dx1.csv
+        Name: mesh_rectangle_1.csv
         Path: ./examples
 Discretization:
     Horizon_Factor_m_value: 6.
@@ -16,10 +16,10 @@ Discretization:
     Volume: 1
 Output:
     VTK:
-        Path: ./outDIC/
+        Path: ./out/
         Type:
             - Displacement
             - Neighbors
-            - Strain
+            - Strain_Energy
 Parallel:
    Threads: 1
