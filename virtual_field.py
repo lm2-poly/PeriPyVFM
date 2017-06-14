@@ -5,6 +5,8 @@ import random
 from scipy.optimize import minimize, fmin_cobyla
 import sys
 
+case = ""
+
 def readVirtualField(filename):
     
     data = []
@@ -18,8 +20,8 @@ def readVirtualField(filename):
     
     
     for i in range(0,len(data)):
-        u[i][0] = data[i][4] 
-        u[i][1] = data[i][5] 
+        u[i][0] = data[i][4] + random.uniform(-1.,1.) * 1e-4
+        u[i][1] = data[i][5] + random.uniform(-1.,1.) * 1e-3
         
     return u
 
@@ -34,8 +36,16 @@ def res1(vf1,vf2):
      vf1 += 56000
      return np.sqrt(vf1*vf1 + vf2*vf2)
  
+def res1_sym(vf1,vf2):
+     vf1 += 50000
+     return np.sqrt(vf1*vf1 + vf2*vf2)
+ 
 def res2(vf1,vf2):
     return np.sqrt(vf1*vf1 + vf2*vf2) / 56000.
+
+def res2_sym(vf1,vf2):
+    return np.sqrt(vf1*vf1 + vf2*vf2) / 50000.
+
 
 def residual(P, deck):
     
@@ -57,18 +67,31 @@ def residual(P, deck):
     if deck.vtk_writer.vtk_enabled == True:
         writeParaview(deck,problem)
     
-    print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2) , res2(vf1,vf2)
+    if case == "sym":
+        print deck.bulk_modulus, deck.shear_modulus, res2_sym(vf1,vf2)
+        sys.exit()
+        return res2_sym(vf1,vf2)
+    else:
+        print deck.bulk_modulus, deck.shear_modulus, res2(vf1,vf2)
+        sys.exit()
+        return res2(vf1,vf2)
     
-    sys.exit()
     
-    return res1(vf1,vf2)
+    
+    
+   
 
+if case == "sym":
+    u1 = readVirtualField("./examples/mesh_vf1_sym.csv")
+    u2 = readVirtualField("./examples/mesh_vf2_sym.csv")
 
-u1 = readVirtualField("./examples/mesh_vf1.csv")
-u2 = readVirtualField("./examples/mesh_vf2.csv")
-#print u2
+    deck = DIC_deck("examples/input_elas_2D_sym.yaml")
 
-deck = DIC_deck("examples/input_elas_2D_short.yaml")
+else:
+    u1 = readVirtualField("./examples/mesh_vf1.csv")
+    u2 = readVirtualField("./examples/mesh_vf2.csv")
+
+    deck = DIC_deck("examples/input_elas_2D.yaml")
 
 
 p = np.array((random.uniform(0.1, 10.) * 1000.,
