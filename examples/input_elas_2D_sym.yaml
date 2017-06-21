@@ -22,4 +22,4 @@ Output:
             - Neighbors
             - Strain_Energy
 Parallel:
-   Threads: 1
+   Threads: 4
