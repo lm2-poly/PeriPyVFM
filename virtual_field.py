@@ -71,7 +71,7 @@ def residual(P, deck):
     
     if case == "sym":
         print deck.bulk_modulus, deck.shear_modulus, res1_sym(vf1,vf2)
-        #sys.exit()
+        sys.exit()
         return res2_sym(vf1,vf2)
     else:
         print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
@@ -96,8 +96,8 @@ else:
     deck = DIC_deck("examples/input_elas_2D.yaml")
 
 
-#p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
-p = np.array([3333.3333,1538.4615])
+p = np.array((random.uniform(3., 3.4) * 1000., random.uniform(1.4, 1.6) * 1000.), dtype=float)
+#p = np.array([3333.3333,1538.4615])
 
 #res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
  #                  options={'rhobeg': 100.,'disp': True })
