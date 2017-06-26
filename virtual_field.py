@@ -31,21 +31,20 @@ def nu(P):
 def writeParaview(deck,problem):
     #ccm_class = IO.ccm.CCM_calcul(deck,problem)
     deck.vtk_writer.write_data(deck,problem,None)
-    
-def res1(vf1,vf2):
-     vf1 += 72520
-     return np.sqrt(vf1*vf1 + vf2*vf2) / np.sqrt(72520.**2 + 0.**2)
  
-def res1_sym(vf1,vf2):
-     vf1 += 72520
-     return np.sqrt(vf1*vf1 + vf2*vf2) / np.sqrt(72520.**2 + 0.**2)
+def res1(vf1,vf2,vf3,vf4):
+     Wext1=2.*(40*25)*(37/2)
+     Wext2 = 0.
+     Wext3 = 2.*(40*25)*np.sin(np.pi*37/(2*37))
+     Wext4 = 0.
+     vf1 += Wext1
+     vf2 += Wext2
+     vf3 += Wext3
+     vf4 += Wext4
+     return np.sqrt(vf1*vf1*0 + vf2*vf2*0 + vf3*vf3 + vf4*vf4) / np.sqrt(0*Wext1**2 + 0*Wext2**2 + Wext3**2 + Wext4**2)
  
-def res2(vf1,vf2):
-    return np.sqrt(vf1*vf1 + vf2*vf2)
-    
-def res2_sym(vf1,vf2):
-    return np.sqrt(vf1*vf1)
-
+def res2(vf1,vf2,vf3,vf4):
+    return np.sqrt(vf1*vf1*0 + vf2*vf2 + vf3*vf3*0 + vf4*vf4)
 
 def residual(P, deck):
     
@@ -53,15 +52,18 @@ def residual(P, deck):
     deck.shear_modulus = P[1]
    
     problem = DIC_problem(deck)
-    vf1 = 0
-    vf2 = 0
-    energy = 0
+    vf1 = 0.
+    vf2 = 0.
+    vf3 = 0.
+    vf4 = 0.
+    energy = 0.
     for i in range(0,len(u1)):
         #if deck.geometry.nodes[i][1] >= 7.:
         vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
-        #print "u1", i, u1[i]
         vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
-        energy += problem.strain_energy[i]
+        vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i] 
+        vf4 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i] 
+        #energy += problem.strain_energy[i]
         #print problem.strain_energy[i]
     #print "Energies" ,vf1 , vf2 , energy
     
@@ -70,22 +72,24 @@ def residual(P, deck):
         writeParaview(deck,problem)
     
     if case == "sym":
-        print deck.bulk_modulus, deck.shear_modulus, res1_sym(vf1,vf2)
+        print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2,vf3,vf4)
         #sys.exit()
-        return res2_sym(vf1,vf2)
+        return res1(vf1,vf2,vf3,vf4)
     else:
         print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
         sys.exit()
-        return res2(vf1,vf2)
+        return res1(vf1,vf2)
     
     
     
     
-bnds=((0,10000),(0,10000))   
+bnds=((0.1,10000),(0.1,10000))   
 
 if case == "sym":
     u1 = readVirtualField("./examples/mesh_vf1_sym.csv")
     u2 = readVirtualField("./examples/mesh_vf2_sym.csv")
+    u3 = readVirtualField("./examples/mesh_vf3_sym.csv")
+    u4 = readVirtualField("./examples/mesh_vf4_sym.csv")
 
     deck = DIC_deck("examples/input_elas_2D_sym.yaml")
 
@@ -102,6 +106,6 @@ p = np.array([3333.3333,1538.4615])
 #res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
  #                  options={'rhobeg': 100.,'disp': True })
  
-res = minimize(residual, p, args=(deck), method='SLSQP', bounds=bnds)
+res = minimize(residual, p, args=(deck), method='L-BFGS-B', bounds=bnds)
 
 print res.x
