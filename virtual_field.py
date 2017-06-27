@@ -32,19 +32,23 @@ def writeParaview(deck,problem):
     #ccm_class = IO.ccm.CCM_calcul(deck,problem)
     deck.vtk_writer.write_data(deck,problem,None)
  
-def res1(vf1,vf2,vf3,vf4):
-     Wext1=2.*(40*25)*(37/2)
+def res1(vf1,vf2):
+     #Wext1= 2.*(40.*25.)*(37./2.)
+     #Wext2 = 0.
+     Wext1 = 2.*(40.*25.)*np.sin(np.pi*37./(2.*37.))
      Wext2 = 0.
-     Wext3 = 2.*(40*25)*np.sin(np.pi*37/(2*37))
-     Wext4 = 0.
      vf1 += Wext1
      vf2 += Wext2
-     vf3 += Wext3
-     vf4 += Wext4
-     return np.sqrt(vf1*vf1*0 + vf2*vf2*0 + vf3*vf3 + vf4*vf4) / np.sqrt(0*Wext1**2 + 0*Wext2**2 + Wext3**2 + Wext4**2)
- 
-def res2(vf1,vf2,vf3,vf4):
-    return np.sqrt(vf1*vf1*0 + vf2*vf2 + vf3*vf3*0 + vf4*vf4)
+     return np.sqrt(vf1*vf1 + vf2*vf2) / np.sqrt(Wext1**2 + Wext2**2)
+     
+def res2(vf1,vf2):
+     #Wext1= 2.*(40.*25.)*(37./2.)
+     #Wext2 = 0.
+     Wext1 = 2.*(40.*25.)*np.sin(np.pi*37./(2.*37.))
+     Wext2 = 0.
+     vf1 += Wext1
+     vf2 += Wext2
+     return np.sqrt(vf1*vf1 + vf2*vf2)
 
 def residual(P, deck):
     
@@ -54,15 +58,12 @@ def residual(P, deck):
     problem = DIC_problem(deck)
     vf1 = 0.
     vf2 = 0.
-    vf3 = 0.
-    vf4 = 0.
-    energy = 0.
+    #energy = 0.
     for i in range(0,len(u1)):
-        #if deck.geometry.nodes[i][1] >= 7.:
-        vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
-        vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
-        vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i] 
-        vf4 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i] 
+        #vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
+        #vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
+        vf1 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i] 
+        vf2 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i] 
         #energy += problem.strain_energy[i]
         #print problem.strain_energy[i]
     #print "Energies" ,vf1 , vf2 , energy
@@ -72,9 +73,9 @@ def residual(P, deck):
         writeParaview(deck,problem)
     
     if case == "sym":
-        print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2,vf3,vf4)
+        print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
         #sys.exit()
-        return res1(vf1,vf2,vf3,vf4)
+        return res1(vf1,vf2)
     else:
         print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
         sys.exit()
