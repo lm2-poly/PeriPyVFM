@@ -29,8 +29,8 @@ def nu(P):
     return (3. * P[0] - 2. * P[1]) / (2. * (3. * P[0] + P[1]))
 
 def writeParaview(deck,problem):
-    #ccm_class = IO.ccm.CCM_calcul(deck,problem)
-    deck.vtk_writer.write_data(deck,problem,None)
+    ccm_class = IO.ccm.CCM_calcul(deck,problem)
+    deck.vtk_writer.write_data(deck,problem,ccm_class)
  
 def res1(vf1,vf2):
      #Wext1= 2.*(40.*25.)*(37./2.)
@@ -70,6 +70,7 @@ def residual(P, deck):
     
     
     if deck.vtk_writer.vtk_enabled == True:
+	ccm_class = IO.ccm.CCM_calcul(deck, problem)
         writeParaview(deck,problem)
     
     if case == "sym":
