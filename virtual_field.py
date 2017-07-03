@@ -5,7 +5,7 @@ import random
 from scipy.optimize import minimize, fmin_cobyla
 import sys
 
-case = "sym"
+case = ""
 
 def readVirtualField(filename):
     
@@ -35,8 +35,8 @@ def writeParaview(deck,problem):
 def res1(vf1,vf2):
      #Wext1= 2.*(40.*25.)*(37./2.)
      #Wext2 = 0.
-     Wext1 = 2.*(40.*25.)*np.sin(np.pi*37./(2.*37.))
-     Wext2 = 0.
+     Wext1 = 0.
+     Wext2 = 75000.
      vf1 += Wext1
      vf2 += Wext2
      return np.sqrt(vf1*vf1 + vf2*vf2) / np.sqrt(Wext1**2 + Wext2**2)
@@ -44,11 +44,11 @@ def res1(vf1,vf2):
 def res2(vf1,vf2):
      #Wext1= 2.*(40.*25.)*(37./2.)
      #Wext2 = 0.
-     Wext1 = 2.*(40.*25.)*np.sin(np.pi*37./(2.*37.))
+     Wext1 = 0.
      Wext2 = 0.
      vf1 += Wext1
      vf2 += Wext2
-     return np.sqrt(vf1*vf1 + vf2*vf2)
+     return np.sqrt(vf1*vf1*0. + vf2*vf2)
 
 def residual(P, deck):
     
@@ -62,10 +62,10 @@ def residual(P, deck):
     for i in range(0,len(u1)):
         #vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
         #vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
-        vf1 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i] 
-        vf2 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i] 
+        vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
+        vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
         #energy += problem.strain_energy[i]
-        #print problem.strain_energy[i]
+    #print problem.strain_energy[1813]
     #print "Energies" ,vf1 , vf2 , energy
     
     
@@ -74,12 +74,12 @@ def residual(P, deck):
     
     if case == "sym":
         print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
-        #sys.exit()
-        return res1(vf1,vf2)
-    else:
-        print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
         sys.exit()
         return res1(vf1,vf2)
+    else:
+        print deck.bulk_modulus, deck.shear_modulus, res2(vf1,vf2)
+        sys.exit()
+        return res2(vf1,vf2)
     
     
     
@@ -95,14 +95,15 @@ if case == "sym":
     deck = DIC_deck("examples/input_elas_2D_sym.yaml")
 
 else:
-    u1 = readVirtualField("./examples/mesh_vf.csv")
-    u2 = readVirtualField("./examples/mesh_vf.csv")
+    u1 = readVirtualField("./examples/mesh_beam_vf1.csv")
+    u2 = readVirtualField("./examples/mesh_beam_vf2.csv")
 
     deck = DIC_deck("examples/input_elas_2D.yaml")
 
 
 #p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
 p = np.array([3333.3333,1538.4615])
+#p = np.array([2161.0000000000,1724.1500000000])
 
 #res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
  #                  options={'rhobeg': 100.,'disp': True })

@@ -7,7 +7,7 @@ Data:
     Type: Plane_Stress
     Sigma: 6
     File:
-        Name: mesh_rectangle_1.csv
+        Name: mesh_beam.csv
         Path: ./examples
 Discretization:
     Horizon_Factor_m_value: 6.
