@@ -83,10 +83,10 @@ deck = DIC_deck("./input_elas_2D.yaml")
 
 #p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
 #p = np.array([3333.33333,1538.46154])
-p = np.array([3500.,2000.])
+p = 1.05 * np.array([3333.33333,1538.46154])
 
-res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-3,
-                   options={'rhobeg': 50.,'disp': True })
+res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
+                   options={'rhobeg': 1.,'disp': True })
  
 #res = minimize(residual, p, args=(deck), method='L-BFGS-B', bounds=bnds)
 
