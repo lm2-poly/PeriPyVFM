@@ -27,15 +27,15 @@ def readVirtualField(filename):
 
 
 def writeParaview(deck, problem):
-    #ccm = IO.ccm.CCM_calcul(deck,problem)
-    deck.vtk_writer.write_data(deck, problem, None)
+    ccm = IO.ccm.CCM_calcul(deck,problem)
+    deck.vtk_writer.write_data(deck, problem, ccm)
 
 
 def res(Wint_vf1,Wint_vf2):
      Wext_vf1 = 3750.
      Wext_vf2 = -140625.
-     Wint_vf1 += 323.58
-     Wint_vf1 += -17720.36
+     Wint_vf1 += 323.58134265
+     Wint_vf2 += -17720.35699
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
 
 
@@ -75,8 +75,8 @@ deck = DIC_deck("./input_elas_2D.yaml")
 
 
 #p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
-p = np.array([3333.3333,1538.4615])
-#p = np.array([3500,2000])
+#p = np.array([3333.3333,1538.4615])
+p = np.array([3500,2000])
 
 res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-3,
                    options={'rhobeg': 50.,'disp': True })

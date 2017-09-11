@@ -22,5 +22,7 @@ Output:
             - Neighbors
             - Strain_Energy
             - Force
+            - Stress
+            - Strain
 Parallel:
-   Threads: 4
+   Threads: 8

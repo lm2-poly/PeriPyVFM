@@ -10,16 +10,17 @@ Data:
         Name: mesh_beam.csv
         Path: ./examples
 Discretization:
-    Horizon_Factor_m_value: 6.
-    Influence_Function: 1.0
-    Saftety_Factor: 1.001
+    Horizon_Factor_m_value: 4.
+    Influence_Function: EXP
+    Safety_Factor: 1.001
     Volume: 1
 Output:
     VTK:
-        Path: ./out/
+        Path: ./out2/
         Type:
             - Displacement
             - Neighbors
             - Strain_Energy
+            - Force
 Parallel:
-   Threads: 1
+   Threads: 4
