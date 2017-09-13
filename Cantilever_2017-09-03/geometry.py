@@ -44,9 +44,12 @@ for i in range(0,nx):
 		yInit.append(y + j * dy)
 
 f1 = open('mesh.csv', 'w')
+f2 = open('mesh_vf2.csv', 'w')
+f3 = open('mesh_vf3.csv', 'w')
+
 		
 X = []
-Y = []		
+Y = []	
 for i in range(0,len(xInit)):	
 	u.append((P*yInit[i]/(6*E*I))*(3*(L**2-xInit[i]**2)+(2+nu)*(yInit[i]**2-c**2)))
 	v.append((P/(6*E*I))*(3*nu*xInit[i]*yInit[i]**2+xInit[i]**3-3*L**2*xInit[i]+2*L**3+c**2*(4+5*nu)*(L-xInit[i])))
@@ -60,8 +63,11 @@ for i in range(0,len(xInit)):
 	X.append(xInit[i]+u[i])
 	Y.append(yInit[i]+v[i])
 	f1.write(str(xInit[i]) + "," + str(yInit[i]) + ",0," + str(u[i]) + "," + str(v[i])  + ",0," + str(X[i])  + "," + str(Y[i])  + "," + str(s11[i])  + "," + str(s22[i])  + "," + str(s12[i])  + "," + str(e11[i])  + "," + str(e22[i])  + "," + str(gamma[i])  + "," + str(strain[i])+"\n") 
-
+	f2.write(str(i)+","+str(xInit[i])+","+str(yInit[i])+",0,0,"+str(xInit[i]-L)+",0\n")
+	f3.write(str(i)+","+str(xInit[i])+","+str(yInit[i])+",0,"+str((xInit[i]-L)*yInit[i])+","+str(0.5*(xInit[i]-L)**2)+",0\n")	
 f1.close()
+f2.close()
+f3.close()
 plt.scatter(X,Y)
 plt.savefig("deformed.pdf")
 
