@@ -42,6 +42,8 @@ for i in range(0,nx):
 	for j in range(0,ny):
 		xInit.append(x + i * dx)
 		yInit.append(y + j * dy)
+
+f1 = open('mesh.csv', 'w')
 		
 X = []
 Y = []		
@@ -57,8 +59,9 @@ for i in range(0,len(xInit)):
 	strain.append(0.5*(s11[i]*e11[i]+s22[i]*e22[i]+s12[i]*gamma[i]))	
 	X.append(xInit[i]+u[i])
 	Y.append(yInit[i]+v[i])
-	print xInit[i] , "," , yInit[i] , ", 0 ,", u[i] , "," , v[i]  , ", 0 ," , X[i]  , "," , Y[i]  , "," , s11[i]  , "," , s22[i]  , "," , s12[i]  , "," , e11[i]  , "," , e22[i]  , "," , gamma[i]  , "," , strain[i] 
+	f1.write(str(xInit[i]) + "," + str(yInit[i]) + ",0," + str(u[i]) + "," + str(v[i])  + ",0," + str(X[i])  + "," + str(Y[i])  + "," + str(s11[i])  + "," + str(s22[i])  + "," + str(s12[i])  + "," + str(e11[i])  + "," + str(e22[i])  + "," + str(gamma[i])  + "," + str(strain[i])+"\n") 
 
+f1.close()
 plt.scatter(X,Y)
 plt.savefig("deformed.pdf")
 
