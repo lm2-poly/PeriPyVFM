@@ -24,15 +24,15 @@ def readVirtualField(filename):
 
 
 def writeParaview(deck, problem):
-    ccm = IO.ccm.CCM_calcul(deck,problem)
-    deck.vtk_writer.write_data(deck, problem, ccm)
+    #ccm = IO.ccm.CCM_calcul(deck,problem)
+    deck.vtk_writer.write_data(deck, problem, None)
 
 
 def res(Wint_vf1,Wint_vf2):
-     Wext_vf1 = 3750.
-     Wext_vf2 = -140625.
-     Wint_vf1 += 323.58134265
-     Wint_vf2 += -17720.35699
+     Wext_vf1 = 3750. 
+     Wext_vf2 = -140625. 
+     #Wint_vf1 += 410.4192882
+     #Wint_vf2 += -16622.027019
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
 
 
@@ -46,19 +46,19 @@ def residual(P, deck):
     Wint_vf2 = 0.
  
     for i in range(0, len(deck.geometry.nodes)):
-	
+        
         # Internal virtual work from PD internal forces and virtual field #1
         Wint_vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]  
         
         # Internal virtual work from PD internal forces and virtual field #2
         Wint_vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
 
-    if deck.vtk_writer.vtk_enabled == True:
-        writeParaview(deck,problem)
+    #if deck.vtk_writer.vtk_enabled == True:
+    #    writeParaview(deck,problem)
     
     print "K =", deck.bulk_modulus, "G =", deck.shear_modulus
     print res(Wint_vf1,Wint_vf2)
-    #sys.exit()
+    sys.exit()
     return res(Wint_vf1,Wint_vf2)
     
     
@@ -66,8 +66,8 @@ def residual(P, deck):
 ## MINIMIZATION
 
 # Virtual fields read in CSV files
-u1 = readVirtualField("./csv/mesh_vf2.csv")
-u2 = readVirtualField("./csv/mesh_vf3.csv")
+u1 = readVirtualField("./csv/mesh_vf2_2.csv")
+u2 = readVirtualField("./csv/mesh_vf3_2.csv")
 
 # Deck to define PD parameters
 deck = DIC_deck("./input_elas_2D.yaml")
@@ -77,17 +77,13 @@ bnds=((0.1,10000),(0.1,10000))
 
 # Initial value for the minimization
 #p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
-<<<<<<< HEAD
-#p = np.array([3333.3333,1538.4615])
-p = np.array([3500,2000])
-=======
-#p = np.array([3333.33333,1538.46154])
-p = 1.05 * np.array([3333.33333,1538.46154])
->>>>>>> 428f30c595322d688d5e3ade7a7a2766f454cd38
+p = np.array([3333.3333,1538.4615])
+#p = np.array([3500,2000])
+
 
 # Minimization process
 res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
-                   options={'rhobeg': 1.,'disp': True })
+                   options={'rhobeg': 10.,'disp': True })
  
 #res = minimize(residual, p, args=(deck), method='L-BFGS-B', bounds=bnds)
 
