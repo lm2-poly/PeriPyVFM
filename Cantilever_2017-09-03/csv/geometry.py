@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 # Parameter
 
@@ -15,7 +16,7 @@ G =	E/(2*(1+nu))
 
 # Mesh
 
-dx = 0.5
+dx = float(sys.argv[1])
 dy = dx
 x = 0. + dx/2.
 y = -12.5 + dy/2.
