@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import sys
 
 # Parameter
@@ -17,10 +17,16 @@ G =	E/(2*(1+nu))
 # Mesh
 
 dx = float(sys.argv[1])
+#dx = 1.
 dy = dx
 x = 0. + dx/2.
 y = -12.5 + dy/2.
 
+# Gaussian noise : N(mu,sigma_StdDev**2) = mu + N(0,1) * sigma_StdDev with sigma_StdDev = standard deviation = eps * dx/10.
+# Worst case scenerio with eps = 1  ==>  5 * sigma_StdDev = dx/2 (condifence interval of 99,9999 %)
+# Perturbation factor between [0,1]
+eps = 0
+sigma_StdDev = eps * dx/10.
 
 #Computations
 
@@ -58,8 +64,9 @@ f4.write("#x,y,z,u,v,w,a,b,c,d,e,f\n")
 X = []
 Y = []	
 for i in range(0,len(xInit)):	
-	u.append((P*yInit[i]/(6*E*I))*(3*(L**2-xInit[i]**2)+(2+nu)*(yInit[i]**2-c**2)))
-	v.append((P/(6*E*I))*(3*nu*xInit[i]*yInit[i]**2+xInit[i]**3-3*L**2*xInit[i]+2*L**3+c**2*(4+5*nu)*(L-xInit[i])))
+      # Gaussian noise : N(mu,sigma_StdDev**2) = mu + N(0,1) * sigma_StdDev with sigma_StdDev = standard deviation = eps * dx/10.
+	u.append((P*yInit[i]/(6*E*I))*(3*(L**2-xInit[i]**2)+(2+nu)*(yInit[i]**2-c**2)) + np.random.normal(0,1) * sigma_StdDev)
+	v.append((P/(6*E*I))*(3*nu*xInit[i]*yInit[i]**2+xInit[i]**3-3*L**2*xInit[i]+2*L**3+c**2*(4+5*nu)*(L-xInit[i])) + np.random.normal(0,1) * sigma_StdDev)
 	s11.append(-P*xInit[i]*yInit[i]/I)
 	s22.append(0)
 	s12.append(P*(yInit[i]**2-c**2)/(2*I))
