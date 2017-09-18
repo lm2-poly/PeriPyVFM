@@ -25,7 +25,7 @@ y = -12.5 + dy/2.
 # Gaussian noise : N(mu,sigma_StdDev**2) = mu + N(0,1) * sigma_StdDev with sigma_StdDev = standard deviation = eps * dx/10.
 # Worst case scenerio with eps = 1  ==>  5 * sigma_StdDev = dx/2 (condifence interval of 99,9999 %)
 # Perturbation factor between [0,1]
-eps = 0
+eps = float(sys.argv[2])
 sigma_StdDev = eps * dx/10.
 
 #Computations
