@@ -25,7 +25,8 @@ with open('result.dat', 'rb') as csvfile:
 plt.grid()
 plt.xlabel("m")
 plt.ylabel("residual")
-plt.legend(loc=2)      		
-plt.savefig("error.pdf")
+plt.legend(loc=2)
+plt.title("No gaussian noise")      		
+plt.savefig("error_0.pdf")
         
          
