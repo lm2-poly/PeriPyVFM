@@ -33,8 +33,6 @@ sigma_StdDev = eps * dx/10.
 nx = int(L / dx)
 ny = int((2 * c) / dy)
 
-print nx * dx , ny * dy
-
 xInit = []
 yInit = []
 u = []

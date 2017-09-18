@@ -3,7 +3,7 @@ filename="nodal_spacing.dat"
 while read -r line
 do
     spacing="$line"
-    python geometry.py $spacing
+    python geometry.py $spacing 0
     cp cantilever_deformed_2.csv cantilever_deformed_2.csv_"$spacing"
     cp mesh_vf2_2.csv mesh_vf2_2.csv_"$spacing"
     cp mesh_vf3_2.csv mesh_vf3_2.csv_"$spacing"
