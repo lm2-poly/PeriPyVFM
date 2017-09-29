@@ -10,10 +10,10 @@ Data:
         Name: cantilever_dic_2.csv
         Path: ./csv
 Discretization:
-    Horizon_Factor_m_value: 10.
+    Horizon_Factor_m_value: 5.
     Influence_Function: ONE
     Safety_Factor: 1.001
-    Volume: .0001
+    Volume: .0025
 Output:
     VTK:
         Path: ./out2/

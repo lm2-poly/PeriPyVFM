@@ -1,6 +1,6 @@
 SEED -1
 DIMENSION	2
-BB_EXE	exec.sh
+BB_EXE	"python nomad.py"
 BB_OUTPUT_TYPE OBJ
 
 X0 (4000  5000)
