@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-nodes=initial_position.txt
+nodes=mesh_size_$1/nodes_mesh_$1.txt
 
 sed -i '1,3d' ${nodes}
 sed -i 's/   NODE        X                   Y                   Z//g' ${nodes}
@@ -9,7 +9,7 @@ sed -i 's/^[ \t]*//' ${nodes}
 sed -i 's/ \{1,\}/,/g' ${nodes}
 cut -d',' -f2- ${nodes} > tmp && mv tmp ${nodes}
 
-u=displacement.txt
+u=mesh_size_$1/displacement_mesh_$1.txt
 
 sed -i '/^\s*$/d' ${u}
 sed -i 's/^[ \t]*//' ${u}
@@ -28,4 +28,4 @@ sed -i 's/ \{1,\}/,/g' ${u}
 cut -d',' -f2- ${u} > tmp && mv tmp ${u}
 cut -d, -f1-3 ${u} > tmp && mv tmp ${u}
 
-python merge.py > bending_dic.csv
+python merge.py $nodes $u > mesh_size_$1/bending_dic_mesh_$1.csv
