@@ -5,9 +5,6 @@ import random
 from scipy.optimize import minimize, fmin_cobyla
 import sys
 
-case = ""
-
-
 def readVirtualField(filename):
 
     data = []
@@ -26,33 +23,17 @@ def readVirtualField(filename):
     return u
 
 
-def nu(P):
-    return (3. * P[0] - 2. * P[1]) / (2. * (3. * P[0] + P[1]))
-
-
 def writeParaview(deck, problem):
-    # ccm = IO.ccm.CCM_calcul(deck,problem)
+    #ccm = IO.ccm.CCM_calcul(deck,problem)
     deck.vtk_writer.write_data(deck, problem, None)
 
 
-def res1(vf1, vf2):
-     # Wext1= 2.*(40.*25.)*(37./2.)
-     # Wext2 = 0.
-     Wext1 = 0.
-     Wext2 = 75000.
-     vf1 += Wext1
-     vf2 += Wext2
-     return np.sqrt(vf1 * vf1 + vf2 * vf2) / np.sqrt(Wext1**2 + Wext2**2)
-
-
-def res2(vf1, vf2):
-     # Wext1= 
-     # Wext2 = 0.
-     Wext1 = 0.38
-     Wext2 = 0.
-     vf1 += Wext1
-     vf2 += Wext2
-     return np.sqrt(vf1 * vf1  + vf2 * vf2 * 0.)
+def res(Wint_vf1,Wint_vf2):
+     Wext_vf1 = 3750. 
+     Wext_vf2 = -140625. 
+     #Wint_vf1 += 410.4192882
+     #Wint_vf2 += -16622.027019
+     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
 
 
 def residual(P, deck):
@@ -61,67 +42,49 @@ def residual(P, deck):
     deck.shear_modulus = P[1]
 
     problem = DIC_problem(deck)
-    vf1 = 0.
-    vf2 = 0.
-    energy = 0.
-
+    Wint_vf1 = 0.
+    Wint_vf2 = 0.
+ 
     for i in range(0, len(deck.geometry.nodes)):
-	# scale = len(problem.neighbors.get_index_x_family(i)) / (148.)
-	# vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]
-	# vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) *
-	# deck.geometry.volumes[i]
-	forces = 0
-	if deck.geometry.nodes[i][0] < 65  :
-		print problem.force_int[i,:,1] 
-        	vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]  
-        	vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
-        	energy += problem.strain_energy[i]
-		forces += problem.force_int[i,:,1]
-    	
+        
+        # Internal virtual work from PD internal forces and virtual field #1
+        Wint_vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]  
+        
+        # Internal virtual work from PD internal forces and virtual field #2
+        Wint_vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
+
+    #if deck.vtk_writer.vtk_enabled == True:
+    #    writeParaview(deck,problem)
     
-    print sum(problem.strain_energy) , energy , vf1  , vf2, forces
-    # print "Energies" ,vf1 , vf2 , energy
-    
-    
-    if deck.vtk_writer.vtk_enabled == True:
-        writeParaview(deck,problem)
-    
-    if case == "sym":
-        print deck.bulk_modulus, deck.shear_modulus, res1(vf1,vf2)
-        sys.exit()
-        return res1(vf1,vf2)
-    else:
-        print deck.bulk_modulus, deck.shear_modulus, res2(vf1,vf2)
-        sys.exit()
-        return res2(vf1,vf2)
+    print "K =", deck.bulk_modulus, "G =", deck.shear_modulus
+    print res(Wint_vf1,Wint_vf2)
+    sys.exit()
+    return res(Wint_vf1,Wint_vf2)
     
     
     
-    
+## MINIMIZATION
+
+# Virtual fields read in CSV files
+u1 = readVirtualField("./csv/mesh_vf2_2.csv")
+u2 = readVirtualField("./csv/mesh_vf3_2.csv")
+
+# Deck to define PD parameters
+deck = DIC_deck("./input_elas_2D.yaml")
+
+# Domain of definition to look for the material properties
 bnds=((0.1,10000),(0.1,10000))   
 
-if case == "sym":
-    u1 = readVirtualField("./examples/mesh_vf1_sym.csv")
-    u2 = readVirtualField("./examples/mesh_vf2_sym.csv")
-    u3 = readVirtualField("./examples/mesh_vf3_sym.csv")
-    u4 = readVirtualField("./examples/mesh_vf4_sym.csv")
-
-    deck = DIC_deck("examples/input_elas_2D_sym.yaml")
-
-else:
-    u1 = readVirtualField("./examples/mesh_beam_vf1.csv")
-    u2 = readVirtualField("./examples/mesh_beam_vf2.csv")
-
-    deck = DIC_deck("examples/input_elas_2D.yaml")
-
-
-# p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
+# Initial value for the minimization
+#p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
 p = np.array([3333.3333,1538.4615])
-# p = np.array([2161.0000000000,1724.1500000000])
+#p = np.array([3500,2000])
 
-# res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
- #                  options={'rhobeg': 100.,'disp': True })
+
+# Minimization process
+res = minimize(residual, p, args=(deck), method='COBYLA', tol=1e-8,
+                   options={'rhobeg': 10.,'disp': True })
  
-res = minimize(residual, p, args=(deck), method='L-BFGS-B', bounds=bnds)
+#res = minimize(residual, p, args=(deck), method='L-BFGS-B', bounds=bnds)
 
 print res.x
