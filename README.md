@@ -1,2 +1,6 @@
-# pd_vfm
-Virtual field method for ordinary state-based peridynamics
+# A peridynamic formulation of the virtual field method
+
+
+### Dependencies
+
+* [PeriPyDIC](https://github.com/lm2-poly/PeriPyDIC)
