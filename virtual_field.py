@@ -29,10 +29,11 @@ def writeParaview(deck, problem):
 
 
 def res(Wint_vf1,Wint_vf2):
-     Wext_vf1 = 3750. 
-     Wext_vf2 = -140625. 
+     Wext_vf1 = 48000 
+     Wext_vf2 = 48000 
      #Wint_vf1 += 410.4192882
      #Wint_vf2 += -16622.027019
+     print Wint_vf1 , Wint_vf2
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
 
 
@@ -53,8 +54,8 @@ def residual(P, deck):
         # Internal virtual work from PD internal forces and virtual field #2
         Wint_vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
 
-    #if deck.vtk_writer.vtk_enabled == True:
-    #    writeParaview(deck,problem)
+    if deck.vtk_writer.vtk_enabled == True:
+        writeParaview(deck,problem)
     
     print "K =", deck.bulk_modulus, "G =", deck.shear_modulus
     print res(Wint_vf1,Wint_vf2)
@@ -66,8 +67,8 @@ def residual(P, deck):
 ## MINIMIZATION
 
 # Virtual fields read in CSV files
-u1 = readVirtualField("./csv/mesh_vf2_2.csv")
-u2 = readVirtualField("./csv/mesh_vf3_2.csv")
+u1 = readVirtualField("./Bending/mesh_vf2_0_125.csv")
+u2 = readVirtualField("./Bending/mesh_vf2_0_125.csv")
 
 # Deck to define PD parameters
 deck = DIC_deck("./input_elas_2D.yaml")
