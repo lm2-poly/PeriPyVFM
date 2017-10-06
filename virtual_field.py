@@ -29,11 +29,8 @@ def writeParaview(deck, problem):
 
 
 def res(Wint_vf1,Wint_vf2):
-     Wext_vf1 = 48000 
-     Wext_vf2 = 48000 
-     #Wint_vf1 += 410.4192882
-     #Wint_vf2 += -16622.027019
-     print Wint_vf1 , Wint_vf2
+     Wext_vf1 = 48000. 
+     Wext_vf2 = 48000. 
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
 
 
@@ -67,8 +64,8 @@ def residual(P, deck):
 ## MINIMIZATION
 
 # Virtual fields read in CSV files
-u1 = readVirtualField("./Bending/mesh_vf2_0_125.csv")
-u2 = readVirtualField("./Bending/mesh_vf2_0_125.csv")
+u1 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
+u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
 
 # Deck to define PD parameters
 deck = DIC_deck("./input_elas_2D.yaml")
