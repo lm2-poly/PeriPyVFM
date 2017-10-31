@@ -28,10 +28,11 @@ def writeParaview(deck, problem):
     deck.vtk_writer.write_data(deck, problem, None)
 
 
-def res(Wint_vf1,Wint_vf2):
+def res(Wint_vf1,Wint_vf2,Wint_vf3):
      Wext_vf1 = 48000. 
-     Wext_vf2 = 48000. 
-     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
+     Wext_vf2 = 0. 
+     Wext_vf3 = 0.
+     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2)
 
 
 def residual(P, deck):
@@ -42,6 +43,7 @@ def residual(P, deck):
     problem = DIC_problem(deck)
     Wint_vf1 = 0.
     Wint_vf2 = 0.
+    Wint_vf3 = 0.
  
     for i in range(0, len(deck.geometry.nodes)):
         
@@ -49,23 +51,27 @@ def residual(P, deck):
         Wint_vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i]  
         
         # Internal virtual work from PD internal forces and virtual field #2
-        Wint_vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
+        #Wint_vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
+        # Internal virtual work from PD internal forces and virtual field #3
+        Wint_vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
 
-    if deck.vtk_writer.vtk_enabled == True:
-        writeParaview(deck,problem)
+    #if deck.vtk_writer.vtk_enabled == True:
+    #    writeParaview(deck,problem)
     
     print "K =", deck.bulk_modulus, "G =", deck.shear_modulus
-    print res(Wint_vf1,Wint_vf2)
+    print Wint_vf1, Wint_vf2 , Wint_vf3
+    print res(Wint_vf1,Wint_vf2,Wint_vf3)
     sys.exit()
-    return res(Wint_vf1,Wint_vf2)
+    return res(Wint_vf1,Wint_vf2,Wint_vf3)
     
     
     
 ## MINIMIZATION
 
 # Virtual fields read in CSV files
-u1 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
-u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
+u1 = readVirtualField("./Bending/mesh_vf1_0_25.csv")
+#u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
+u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
 
 # Deck to define PD parameters
 deck = DIC_deck("./input_elas_2D.yaml")

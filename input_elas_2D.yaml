@@ -23,4 +23,4 @@ Output:
             - Strain_Energy
             - Force
 Parallel:
-   Threads: 8
+   Threads: 1

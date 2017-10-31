@@ -1,39 +1,25 @@
 import csv
-import numpy as  np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import matplotlib
+matplotlib.rc('text', usetex = True)
+matplotlib.rc('font', **{'family' : "sans-serif"})
 
-def readFile(file):
-	with open(file, 'r') as csvfile:
-		reader = csv.reader(csvfile, delimiter=' ')
-		data = []
-		for row in reader:
-			data.append(row)
-	return np.array(data,dtype=float)
+m = []
+e = []
 
-def plot(error,k,g,nu,ax,file,color):
+with open('m_val.csv', 'rb') as csvfile:
+     spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+     for row in spamreader:
+	m.append(float(row[0]))
+	e.append(float(row[1]))
+     
 
-	ax.plot_wireframe(k,g,error,label=str(file))
-	#color = base_line.get_color()
-	#last = len(k)-1
-	ax.scatter(k,g,error,c=color)
-
-data = readFile("run.dat")
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-error = data[:,2]
-k = data[:,0]
-g = data[:,1]
-
-plot(error,k,g,error,ax,0,error)
-
-ax.scatter([3333.333],[1538.4615],[0],marker="*")
-
-
-ax.set_xlabel("$K$")
-ax.set_ylabel("$G$")
-ax.set_zlabel(r"$e$")
-plt.legend()
-plt.show()
+plt.plot(m,e,marker="o")     
+plt.grid()
+plt.xlabel(r"$m$")
+plt.ylabel(r"residual")
+#plt.legend(loc=2)
+#plt.title(r"No gaussian noise")      		
+plt.savefig("convergence.pdf")
+        
+         
