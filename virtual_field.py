@@ -29,9 +29,9 @@ def writeParaview(deck, problem):
 
 
 def res(Wint_vf1,Wint_vf2,Wint_vf3):
-     Wext_vf1 = 48000. 
+     Wext_vf1 = 260000. 
      Wext_vf2 = 0. 
-     Wext_vf3 = 0.
+     Wext_vf3 = -214340.
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2)
 
 
@@ -55,8 +55,8 @@ def residual(P, deck):
         # Internal virtual work from PD internal forces and virtual field #3
         Wint_vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
 
-    #if deck.vtk_writer.vtk_enabled == True:
-    #    writeParaview(deck,problem)
+    if deck.vtk_writer.vtk_enabled == True:
+        writeParaview(deck,problem)
     
     print "K =", deck.bulk_modulus, "G =", deck.shear_modulus
     print Wint_vf1, Wint_vf2 , Wint_vf3
@@ -69,19 +69,19 @@ def residual(P, deck):
 ## MINIMIZATION
 
 # Virtual fields read in CSV files
-u1 = readVirtualField("./Bending/mesh_vf1_0_25.csv")
+u1 = readVirtualField("./Experiment/vf1_exp.csv")
 #u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
-u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
+u3 = readVirtualField("./Experiment/vf2_exp.csv")
 
 # Deck to define PD parameters
-deck = DIC_deck("./input_elas_2D.yaml")
+deck = DIC_deck("./input_elas_2D_exp.yaml")
 
 # Domain of definition to look for the material properties
 bnds=((0.1,10000),(0.1,10000))   
 
 # Initial value for the minimization
 #p = np.array((random.uniform(0.1, 10.) * 1000., random.uniform(0.1, 10.) * 1000.), dtype=float)
-p = np.array([3333.3333,1538.4615])
+p = np.array([3884.6153846153843,1205.839416058394])
 #p = np.array([3500,2000])
 
 

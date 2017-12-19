@@ -29,7 +29,7 @@ def writeParaview(deck,problem):
 def res1(Wint_vf1,Wint_vf2,Wint_vf3):
      Wext_vf1 = 48000. 
      Wext_vf2 = 0.
-     Wext_vf3 = 0.
+     Wext_vf3 = 32000.
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2)
  
 
@@ -47,6 +47,7 @@ def residual(P, deck):
         vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
         #vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
         vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
+    print vf1 , vf3
     return res1(vf1,vf2,vf3)
     
     
@@ -56,7 +57,8 @@ bnds=((0.1,10000),(0.1,10000))
 
 u1 = readVirtualField("./Bending/mesh_vf1_0_25.csv")
 #u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
-u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
+#u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
+u3 = readVirtualField("./Bending/mesh_vf4_0_25.csv")
 
 deck = DIC_deck("./input_elas_2D.yaml")
 
@@ -64,5 +66,6 @@ file = open(sys.argv[1],'r')
 values = file.readline().replace("\n","")
 values = values.split(' ')
 p = np.array((float(values[0]),float(values[1])), dtype=float)
+print p
 print residual(p,deck) 
 
