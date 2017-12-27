@@ -55,7 +55,7 @@ bnds=((0.1,10000),(0.1,10000))
 
 
 u1 = readVirtualField("./Bending/mesh_vf1_0_25.csv")
-#u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
+#u3 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
 #u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
 u3 = readVirtualField("./Bending/mesh_vf4_0_25.csv")
 
