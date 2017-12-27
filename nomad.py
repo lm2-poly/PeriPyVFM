@@ -28,7 +28,7 @@ def writeParaview(deck,problem):
     
 def res1(Wint_vf1,Wint_vf2,Wint_vf3):
      Wext_vf1 = 48000. 
-     Wext_vf2 = 0.
+     Wext_vf2 = -32000.*0
      Wext_vf3 = 32000.
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2)
  
