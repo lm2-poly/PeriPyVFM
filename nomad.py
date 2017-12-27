@@ -42,12 +42,11 @@ def residual(P, deck):
     vf1 = 0.
     vf2 = 0.
     vf3 = 0.
-    
+    #writeParaview(deck,problem) 
     for i in range(0,len(u1)):
         vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
         #vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
         vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
-    print vf1 , vf3
     return res1(vf1,vf2,vf3)
     
     
@@ -66,6 +65,5 @@ file = open(sys.argv[1],'r')
 values = file.readline().replace("\n","")
 values = values.split(' ')
 p = np.array((float(values[0]),float(values[1])), dtype=float)
-print p
 print residual(p,deck) 
 
