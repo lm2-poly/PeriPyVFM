@@ -26,11 +26,12 @@ def writeParaview(deck,problem):
     #ccm_class = IO.ccm.CCM_calcul(deck,problem)
     deck.vtk_writer.write_data(deck,problem,None)
     
-def res1(Wint_vf1,Wint_vf2,Wint_vf3):
+def res1(Wint_vf1,Wint_vf2,Wint_vf3,Wint_vf4):
      Wext_vf1 = 48000. 
      Wext_vf2 = -32000.*0
-     Wext_vf3 = 32000.
-     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2)
+     Wext_vf3 = 0.
+     Wext_vf4 = 32000.*0
+     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 + (Wint_vf4+Wext_vf4)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2 + Wext_vf4**2)
  
 
 def residual(P, deck):
@@ -39,15 +40,17 @@ def residual(P, deck):
     deck.shear_modulus = P[1]
    
     problem = DIC_problem(deck)
-    vf1 = 0.
-    vf2 = 0.
-    vf3 = 0.
+    Wintvf1 = 0.
+    Wintvf2 = 0.
+    Wintvf3 = 0.
+    Wintvf4 = 0.
     #writeParaview(deck,problem) 
     for i in range(0,len(u1)):
-        vf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
-        #vf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
-        vf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
-    return res1(vf1,vf2,vf3)
+        Wintvf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
+        #Wintvf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
+        Wintvf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
+        #Wintvf4 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i]
+    return res1(Wintvf1,Wintvf2,Wintvf3,Wintvf4)
     
     
     
@@ -55,9 +58,9 @@ bnds=((0.1,10000),(0.1,10000))
 
 
 u1 = readVirtualField("./Bending/mesh_vf1_0_25.csv")
-#u3 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
-#u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
-u3 = readVirtualField("./Bending/mesh_vf4_0_25.csv")
+#u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
+u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
+#u4 = readVirtualField("./Bending/mesh_vf4_0_25.csv")
 
 deck = DIC_deck("./input_elas_2D.yaml")
 
