@@ -17,7 +17,7 @@ with open('m_val.csv', 'rb') as csvfile:
 plt.plot(m,e,marker="o")     
 plt.grid()
 plt.xlabel(r"$m$")
-plt.ylabel(r"residual")
+plt.ylabel(r"Residual $\Phi$")
 #plt.legend(loc=2)
 #plt.title(r"No gaussian noise")      		
 plt.savefig("convergence.pdf")
