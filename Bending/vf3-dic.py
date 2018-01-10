@@ -1,8 +1,8 @@
 import csv
 import sys
 
-L = 128.
-W = 32.
+L = 127.
+W = 31.
           
 with open(sys.argv[1], 'rb') as csvfile:
      spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
