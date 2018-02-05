@@ -1,0 +1,26 @@
+Material:
+    Type: Elastic
+    Bulk_Modulus: 3333.33333
+    Shear_Modulus: 1538.46154
+Data:
+    Dimension: 2
+    Type: Plane_Stress
+    Sigma: 6
+    File:
+        Name: bending_fem_mesh_0_25_noise.csv
+        Path: ./Bending
+Discretization:
+    Horizon_Factor_m_value: 7
+    Influence_Function: ONE
+    Safety_Factor: 1.001
+    Volume: 0.79375
+Output:
+    VTK:
+        Path: ./out2/
+        Type:
+            - Displacement
+            - Neighbors
+            - Strain_Energy
+            - Force
+Parallel:
+   Threads: 1
