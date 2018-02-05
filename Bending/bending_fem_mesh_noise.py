@@ -3,7 +3,8 @@ import sys
 import numpy as np
 import random
 
-mu, sigma = 0, 0.1 # mean and standard deviation
+mu = 0.0 # mean
+sigma = 0.00005 #standard deviation
           
 with open(sys.argv[1], 'rb') as csvfile:
      spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
