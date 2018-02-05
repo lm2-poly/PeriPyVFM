@@ -7,7 +7,7 @@ Data:
     Type: Plane_Stress
     Sigma: 6
     File:
-        Name: bending_dic_mesh_0_25.csv
+        Name: bending_fem_mesh_0_25.csv
         Path: ./Bending
 Discretization:
     Horizon_Factor_m_value: 7
