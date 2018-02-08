@@ -52,7 +52,6 @@ def residual(P, deck):
         #Wintvf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
         Wintvf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
         #Wintvf4 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i]
-    print Wintvf1 , Wintvf3
     return res1(Wintvf1,Wintvf2,Wintvf3,Wintvf4)
     
     

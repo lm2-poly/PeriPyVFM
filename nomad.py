@@ -1,9 +1,19 @@
+# -*- coding: utf-8 -*-
+# Peridynamic virtual field method for extraction of the material properties
+# from displacement obtained by a finite element simualtion
+# 
+#@author: rolland.delorme@polymtl.ca
+#@author: patrick.diehl@polymtl.ca
+
 import csv
 import numpy as np
 from peripydic import *
 import random
 import sys
 
+# Read the displacment of the virtual field
+# @param filename File name of the virtual field's file
+# @return The components (u,v) of the virtual field
 def readVirtualField(filename):
     
     data = []
@@ -22,18 +32,18 @@ def readVirtualField(filename):
         
     return u
 
-def writeParaview(deck,problem):
-    #ccm_class = IO.ccm.CCM_calcul(deck,problem)
-    deck.vtk_writer.write_data(deck,problem,None)
-    
-def res1(Wint_vf1,Wint_vf2,Wint_vf3,Wint_vf4):
+# Computes the residual out of the internal and external energies
+# @param Wint_vf1 Energy obtained by the first virtual field
+# @param Wint_vf3 Energy obtained by the second virtual field
+def res1(Wint_vf1,Wint_vf3):
      Wext_vf1 = 48000. 
-     Wext_vf2 = -32000.*0
      Wext_vf3 = 0.
-     Wext_vf4 = 32000.*0
-     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 + (Wint_vf4+Wext_vf4)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2 + Wext_vf4**2)
+     return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf3**2)
  
-
+# Computes the internal energies and the residual
+# @param P Material properties provided by nomad
+# @param deck The loaded configuration 
+# @return The current residual
 def residual(P, deck):
     
     deck.bulk_modulus = P[0]
@@ -41,30 +51,25 @@ def residual(P, deck):
    
     problem = DIC_problem(deck)
     Wintvf1 = 0.
-    Wintvf2 = 0.
     Wintvf3 = 0.
-    Wintvf4 = 0.
-    #writeParaview(deck,problem) 
     for i in range(0,len(u1)):
         Wintvf1 += np.dot(problem.force_int[i,:,1] , u1[i]) * deck.geometry.volumes[i] 
-        #Wintvf2 += np.dot(problem.force_int[i,:,1] , u2[i]) * deck.geometry.volumes[i] 
         Wintvf3 += np.dot(problem.force_int[i,:,1] , u3[i]) * deck.geometry.volumes[i]
-        #Wintvf4 += np.dot(problem.force_int[i,:,1] , u4[i]) * deck.geometry.volumes[i]
-    return res1(Wintvf1,Wintvf2,Wintvf3,Wintvf4)
-    
-    
-    
-bnds=((0.1,10000),(0.1,10000))   
-
-
+    return res1(Wintvf1,Wintvf3)
+      
+# Read the two virtual fields
 u1 = readVirtualField("./Bending/mesh_vf1_0_25.csv")
 u3 = readVirtualField("./Bending/mesh_vf3_0_25.csv")
 
+# Read the configuration file
 deck = DIC_deck("./input_elas_2D.yaml")
 
+# Read the provided material properties from nomad
 file = open(sys.argv[1],'r')
 values = file.readline().replace("\n","")
 values = values.split(' ')
 p = np.array((float(values[0]),float(values[1])), dtype=float)
+
+# Compute the current residual with the material properties from nomad
 print residual(p,deck) 
 

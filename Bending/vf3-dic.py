@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# Script to generate the second virtual field for the displacement obtained by a finite
+# element simulations
+#@author: rolland.delorme@polymtl.ca
+#@author: patrick.diehl@polymtl.ca
 import csv
 import sys
 
