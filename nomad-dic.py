@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# Peridynamic virtual field method for extraction of the material properties
+# from displacement obtained by a finite element simualtion
+# 
+#@author: rolland.delorme@polymtl.ca
+#@author: patrick.diehl@polymtl.ca
+
 import csv
 import numpy as np
 from peripydic import *
@@ -27,17 +34,13 @@ def writeParaview(deck,problem):
     deck.vtk_writer.write_data(deck,problem,None)
     
 def res1(Wint_vf1,Wint_vf2,Wint_vf3,Wint_vf4):
-     F = 2922.0802
+     F = 6915.
      S = 75.
-     Wext_vf1 = F*S/2. 
+     W = 31.
+     Wext_vf1 = F*S/2.  
+     Wext_vf3 = -F*W/2.
      Wext_vf2 = 0.
-     Wext_vf3 = 0.
      Wext_vf4 = 0.
-     #F = 2922.0802
-     #S = 75.
-     #L = 127.
-     #W = 31.
-     #Wext_vf1 = (F*S/2.)*(W/L) 
      print Wint_vf1 , Wint_vf3
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 + (Wint_vf4+Wext_vf4)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2 + Wext_vf4**2)
  
