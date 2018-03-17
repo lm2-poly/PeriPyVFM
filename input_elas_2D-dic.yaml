@@ -13,7 +13,7 @@ Discretization:
     Horizon_Factor_m_value: 7
     Influence_Function: ONE
     Safety_Factor: 1.001
-    Volume: 0.9072
+    Volume: 0.75
 Output:
     VTK:
         Path: ./out2/
@@ -23,4 +23,4 @@ Output:
             - Strain_Energy
             - Force
 Parallel:
-   Threads: 1
+   Threads: 4
