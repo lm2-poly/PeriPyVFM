@@ -22,5 +22,5 @@ with open(sys.argv[1], 'rb') as csvfile:
          x = float(row[0])
          y = float(row[1])
          #print  str(i)+","+row[0]+","+row[1]+","+row[2]+","+str((x*abs(x)*y)/(L*W))+",0.,0."
-         print  str(i)+","+row[0]+","+row[1]+","+row[2]+","+str((x*np.exp(-0.5*((x)/SigL)**2.))*(W/2*np.exp(-0.5*((y-W/2.)/SigW)**2.)))+","+str((y/L)*((L/2.)-abs(x)))+",0.,0."
+         print  str(i)+","+row[0]+","+row[1]+","+row[2]+","+str(((2./W)*x*np.exp(-0.5*((x)/SigL)**2.))*(L/2*np.exp(-0.5*((y-W/2.)/SigW)**2.)))+","+str((y/L)*((L/2.)-abs(x)))+",0.,0."
          i += 1 
