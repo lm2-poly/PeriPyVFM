@@ -36,8 +36,11 @@ def readVirtualField(filename):
 # @param Wint_vf1 Energy obtained by the first virtual field
 # @param Wint_vf3 Energy obtained by the second virtual field
 def res1(Wint_vf1,Wint_vf3):
-     Wext_vf1 = 48000. 
-     Wext_vf3 = 0.
+     F = 1000.
+     S = 96.
+     W = 32.
+     Wext_vf1 = F*S/2.  
+     Wext_vf3 = -F*W/2.
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf3+Wext_vf3)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf3**2)
  
 # Computes the internal energies and the residual
