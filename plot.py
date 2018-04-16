@@ -14,8 +14,8 @@ with open('m_val.csv', 'rb') as csvfile:
 	e.append(float(row[1]))
      
 
-plt.plot(m,e,marker="o")     
-plt.grid()
+plt.plot(m,e,marker="o",lw=2,color='black')     
+#plt.grid()
 plt.xlabel(r"$m$")
 plt.ylabel(r"Residual $\Phi$")
 #plt.legend(loc=2)

@@ -34,11 +34,11 @@ def writeParaview(deck,problem):
     deck.vtk_writer.write_data(deck,problem,None)
     
 def res1(Wint_vf1,Wint_vf2,Wint_vf3,Wint_vf4):
-     F = 6915.
+     F = 2981.11
      S = 75.
      W = 31.
      Wext_vf1 = F*S/2.  
-     Wext_vf3 = -F*W/2.
+     Wext_vf3 = 0.
      Wext_vf2 = 0.
      Wext_vf4 = 0.
      print Wint_vf1 , Wint_vf3
