@@ -41,7 +41,7 @@ def res1(Wint_vf1,Wint_vf2,Wint_vf3,Wint_vf4):
      F = 2981.11
      S = 75.
      W = 31.
-     Wext_vf1 = F*W/2.  
+     Wext_vf1 = F*S/2.  
      Wext_vf2 = (-F*W/2)*0.
      Wext_vf3 = 0.
      Wext_vf4 = 0.
@@ -73,7 +73,7 @@ bnds=((500.,5000.),(500.,5000.))
 
 
 u1 = readVirtualField("./Bending/mesh_vf1_dic.csv")
-u2 = readVirtualField("./Bending/mesh_vf2_0_25.csv")
+u2 = readVirtualField("./Bending/mesh_vf2_dic.csv")
 #u3 = readVirtualField("./Bending/mesh_vf3_dic.csv")
 #u4 = readVirtualField("./Bending/mesh_vf4_0_25.csv")
 
