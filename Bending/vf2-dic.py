@@ -7,8 +7,8 @@ import csv
 import sys
 import numpy as np
 
-L = 127.
-W = 31.
+L = 126.7
+W = 30.99
 C = 5.
 SigL = (L/2.)/C
 SigW = (W/2.)/C

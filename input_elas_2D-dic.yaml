@@ -5,7 +5,7 @@ Material:
 Data:
     Dimension: 2
     Type: Plane_Stress
-    Sigma: 6
+    Sigma: 12
     File:
         Name: bending_dic_mesh.csv
         Path: ./Bending
@@ -13,7 +13,7 @@ Discretization:
     Horizon_Factor_m_value: 7
     Influence_Function: ONE
     Safety_Factor: 1.001
-    Volume: 0.783125
+    Volume: 0.773125
 Output:
     VTK:
         Path: ./out2/

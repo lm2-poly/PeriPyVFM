@@ -38,14 +38,14 @@ def writeParaview(deck,problem):
     
 def res1(Wint_vf1,Wint_vf2,Wint_vf3,Wint_vf4):
      # Force F to update
-     F = 2981.11
+     F = 2500.
      S = 75.
-     W = 31.
-     Wext_vf1 = F*S/2.  
-     Wext_vf2 = (-F*W/2)*0.
+     W = 30.99
+     Wext_vf1 = (F*S/2) #   F*S/2.  
+     Wext_vf2 = 0. #(-F*W/2)
      Wext_vf3 = 0.
      Wext_vf4 = 0.
-     print Wint_vf1 , Wint_vf2 , Wint_vf3 , Wint_vf4
+     #print Wint_vf1 , Wint_vf2 , Wint_vf3 , Wint_vf4
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 + (Wint_vf3+Wext_vf3)**2 + (Wint_vf4+Wext_vf4)**2) / np.sqrt(Wext_vf1**2 + Wext_vf2**2 + Wext_vf3**2 + Wext_vf4**2)
  
 
