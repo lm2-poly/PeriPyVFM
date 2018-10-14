@@ -40,7 +40,7 @@ def res1(Wint_vf1,Wint_vf2):
      S = 96.
      W = 32.
      Wext_vf1 = F*S/2.  
-     Wext_vf2 = (-F*W/2.)*0.
+     Wext_vf2 = 0.
      return np.sqrt((Wint_vf1+Wext_vf1)**2 + (Wint_vf2+Wext_vf2)**2 ) / np.sqrt(Wext_vf1**2 + Wext_vf2**2)
  
 # Computes the internal energies and the residual
