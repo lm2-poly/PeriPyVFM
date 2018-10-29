@@ -1,4 +1,6 @@
-# A peridynamic formulation of the virtual field method
+# A peridynamic formulation of the virtual field method [![DOI](https://zenodo.org/badge/93547069.svg)](https://zenodo.org/badge/latestdoi/93547069)
+
+
 
 
 ## Dependencies
