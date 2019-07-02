@@ -2,7 +2,7 @@
 # Script to generate the second virtual field for the displacement obtained by a finite
 # element simulations
 #@author: rolland.delorme@polymtl.ca
-#@author: patrick.diehl@polymtl.ca
+#@author: patrickdiehl@lsu.edu
 import csv
 import sys
 import numpy as np

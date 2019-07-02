@@ -3,7 +3,7 @@
 # from displacement obtained by a finite element simualtion
 # 
 #@author: rolland.delorme@polymtl.ca
-#@author: patrick.diehl@polymtl.ca
+#@author: patrickdiehl@lsu.edu
 
 import csv
 import numpy as np
